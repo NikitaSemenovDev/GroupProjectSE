@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>GroupProjectSE</name>
+    </assembly>
+    <members>
+        <member name="M:GroupProjectSE.Controllers.ValuesController.Get">
+            <summary>
+            Get random values
+            </summary>
+            <remarks>
+            Sample request:
+                GET /
+            </remarks>
+            <returns></returns>
+        </member>
+    </members>
+</doc>
