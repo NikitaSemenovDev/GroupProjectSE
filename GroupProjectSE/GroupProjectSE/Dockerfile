@@ -17,5 +17,6 @@ FROM base AS final
 WORKDIR /app
 COPY ["GroupProjectSE/log4net.config", "."]
 COPY ["GroupProjectSE/GroupProjectSE.xml", "."]
+COPY ["GroupProjectSE/appsettings.json", "."]
 COPY --from=publish /app .
 ENTRYPOINT ["dotnet", "GroupProjectSE.dll"]

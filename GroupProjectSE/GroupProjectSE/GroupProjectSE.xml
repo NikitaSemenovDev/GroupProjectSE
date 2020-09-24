@@ -4,6 +4,13 @@
         <name>GroupProjectSE</name>
     </assembly>
     <members>
+        <member name="M:GroupProjectSE.Controllers.ImageProcessingController.GetImageProcessingResult(Microsoft.AspNetCore.Http.IFormFile)">
+            <summary>
+            Получение результата обработки изображения
+            </summary>
+            <param name="image">Изображение для обработки</param>
+            <returns>Результат обработки изображения</returns>
+        </member>
         <member name="M:GroupProjectSE.Controllers.ValuesController.Get">
             <summary>
             Get random values
@@ -13,6 +20,13 @@
                 GET /
             </remarks>
             <returns></returns>
+        </member>
+        <member name="M:GroupProjectSE.ExternalServices.ImageProcessorService.GetImageResult(System.IO.Stream)">
+            <summary>
+            Получение результата обработки изображения
+            </summary>
+            <param name="image">Поток байт изображения</param>
+            <returns>Результат обработки изображения</returns>
         </member>
     </members>
 </doc>
