@@ -35,9 +35,10 @@ namespace GroupProjectSE.Controllers
         {
             try
             {
-                Stream stream = new MemoryStream();
+                MemoryStream stream = new MemoryStream();
                 await image.CopyToAsync(stream);
-                var result = await ImageProcessorService.GetImageResult(stream);
+                var byts = stream.ToArray();
+                var result = await ImageProcessorService.GetImageResult(byts);
                 return result;
             }
             catch (Exception e)

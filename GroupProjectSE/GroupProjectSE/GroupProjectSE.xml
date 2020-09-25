@@ -21,7 +21,7 @@
             </remarks>
             <returns></returns>
         </member>
-        <member name="M:GroupProjectSE.ExternalServices.ImageProcessorService.GetImageResult(System.IO.Stream)">
+        <member name="M:GroupProjectSE.ExternalServices.ImageProcessorService.GetImageResult(System.Byte[])">
             <summary>
             Получение результата обработки изображения
             </summary>

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using GroupProjectSE.Logging;
 using Microsoft.AspNetCore.Http;
@@ -20,6 +21,7 @@ namespace GroupProjectSE.ExternalServices
         public ImageProcessorService(IConfiguration configuration, HttpClient client, ILogger logger)
         {
             Client = client;
+            Client.DefaultRequestHeaders.Accept.Clear();
             Client.BaseAddress = new Uri(configuration.GetSection("ExternalServices:ImageProcessorServiceUrl").Value);
             Logger = logger;
         }
@@ -30,14 +32,16 @@ namespace GroupProjectSE.ExternalServices
         /// </summary>
         /// <param name="image">Поток байт изображения</param>
         /// <returns>Результат обработки изображения</returns>
-        public async Task<IEnumerable<double>> GetImageResult(Stream image)
+        public async Task<IEnumerable<double>> GetImageResult(byte[] byts)
         {
             try
             {
                 var content = new MultipartFormDataContent();
-                content.Add(new StreamContent(image), "image_data");
-                var response = await Client.PostAsync(Client.BaseAddress + "/GetPrediction", content);
-                var responseContent = await response.Content.ReadAsStringAsync();
+                var imageContent = new ByteArrayContent(byts, 0, byts.Length);
+                imageContent.Headers.ContentType = new MediaTypeHeaderValue("image/jpg");
+                content.Add(imageContent, "image_data", "image.jpg");
+                var response = await Client.PostAsync(Client.BaseAddress + "GetPrediction", content);
+                var responseContent = response.Content.ReadAsStringAsync().Result;
                 var predictions = JsonConvert.DeserializeObject<List<double>>(responseContent);
                 return predictions;
             }
