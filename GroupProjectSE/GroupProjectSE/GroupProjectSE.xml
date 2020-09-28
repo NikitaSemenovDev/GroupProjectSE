@@ -21,11 +21,12 @@
             </remarks>
             <returns></returns>
         </member>
-        <member name="M:GroupProjectSE.ExternalServices.ImageProcessorService.GetImageResult(System.Byte[])">
+        <member name="M:GroupProjectSE.ExternalServices.ImageProcessorService.GetImageResult(System.IO.MemoryStream,System.String)">
             <summary>
             Получение результата обработки изображения
             </summary>
             <param name="image">Поток байт изображения</param>
+            <param name="fileName">Название изображения</param>
             <returns>Результат обработки изображения</returns>
         </member>
     </members>

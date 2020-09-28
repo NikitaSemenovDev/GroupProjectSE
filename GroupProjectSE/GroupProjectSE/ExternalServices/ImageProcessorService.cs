@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
@@ -21,7 +22,6 @@ namespace GroupProjectSE.ExternalServices
         public ImageProcessorService(IConfiguration configuration, HttpClient client, ILogger logger)
         {
             Client = client;
-            Client.DefaultRequestHeaders.Accept.Clear();
             Client.BaseAddress = new Uri(configuration.GetSection("ExternalServices:ImageProcessorServiceUrl").Value);
             Logger = logger;
         }
@@ -31,18 +31,23 @@ namespace GroupProjectSE.ExternalServices
         /// Получение результата обработки изображения
         /// </summary>
         /// <param name="image">Поток байт изображения</param>
+        /// <param name="fileName">Название изображения</param>
         /// <returns>Результат обработки изображения</returns>
-        public async Task<IEnumerable<double>> GetImageResult(byte[] byts)
+        public async Task<IEnumerable<double>> GetImageResult(MemoryStream image, string fileName)
         {
             try
             {
                 var content = new MultipartFormDataContent();
-                var imageContent = new ByteArrayContent(byts, 0, byts.Length);
-                imageContent.Headers.ContentType = new MediaTypeHeaderValue("image/jpg");
-                content.Add(imageContent, "image_data", "image.jpg");
+                var imageContent = new ByteArrayContent(image.ToArray());
+                content.Add(imageContent, "image_data", fileName);
                 var response = await Client.PostAsync(Client.BaseAddress + "GetPrediction", content);
-                var responseContent = response.Content.ReadAsStringAsync().Result;
-                var predictions = JsonConvert.DeserializeObject<List<double>>(responseContent);
+                if (response.StatusCode != HttpStatusCode.OK)
+                {
+                    throw new Exception("Не удалось получить результат обработки");
+                }
+
+                var responseContent = await response.Content.ReadAsStringAsync();
+                var predictions = JsonConvert.DeserializeObject<IEnumerable<double>>(responseContent);
                 return predictions;
             }
             catch (Exception e)
