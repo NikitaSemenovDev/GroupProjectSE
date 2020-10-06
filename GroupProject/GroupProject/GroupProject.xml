@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>GroupProject</name>
+    </assembly>
+    <members>
+        <member name="M:GroupProject.Controllers.ImageProcessingController.GetImageProcessingResult(Microsoft.AspNetCore.Http.IFormFile)">
+            <summary>
+            Получение результата обработки изображения
+            </summary>
+            <param name="image">Изображение для обработки</param>
+            <returns>Результат обработки изображения</returns>
+        </member>
+        <member name="M:GroupProject.Controllers.ValuesController.Get">
+            <summary>
+            Get random values
+            </summary>
+            <remarks>
+            Sample request:
+                GET /
+            </remarks>
+            <returns></returns>
+        </member>
+        <member name="M:GroupProject.ExternalServices.ImageProcessorService.GetImageResult(System.IO.MemoryStream,System.String)">
+            <summary>
+            Получение результата обработки изображения
+            </summary>
+            <param name="image">Поток байт изображения</param>
+            <param name="fileName">Название изображения</param>
+            <returns>Результат обработки изображения</returns>
+        </member>
+    </members>
+</doc>
