@@ -7,6 +7,9 @@ using Microsoft.AspNetCore.Hosting;
 using GroupProject.Logging;
 using System.IO;
 using System.Runtime.CompilerServices;
+using GroupProject.Database;
+using GroupProject.Database.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace GroupProject.Controllers
 {
@@ -16,10 +19,12 @@ namespace GroupProject.Controllers
     public class ValuesController : ControllerBase
     {
         private ILogger Logger { get; }
+        private DatabaseContext Context { get; }
 
-        public ValuesController(ILogger logger)
+        public ValuesController(ILogger logger, DatabaseContext context)
         {
             Logger = logger;
+            Context = context;
         }
 
         /// <summary>
@@ -35,6 +40,13 @@ namespace GroupProject.Controllers
         public ActionResult<IEnumerable<string>> Get()
         {
             return new string[] { "value1", "value2" };
+        }
+
+        [HttpGet]
+        [Route("get-all-users")]
+        public async Task<ActionResult<IEnumerable<User>>> GetUsers()
+        {
+            return await Context.Users.ToListAsync();
         }
 
         // GET api/values/5

@@ -10,6 +10,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace GroupProject.Controllers
 {
+    /// <summary>
+    /// Работа с изображениями
+    /// </summary>
     [Produces("application/json")]
     [Route("api/image-processing")]
     [ApiController]
@@ -29,21 +32,22 @@ namespace GroupProject.Controllers
         /// </summary>
         /// <param name="image">Изображение для обработки</param>
         /// <returns>Результат обработки изображения</returns>
-        [Route("get-result")]
-        [HttpPost]
-        public async Task<IEnumerable<double>> GetImageProcessingResult(IFormFile image)
+        /// <response code="200">Обработка изображения выполнилась успешно</response>
+        /// <response code="500">Ошибка сервера</response>
+        [HttpPost("get-result")]
+        public async Task<IActionResult> GetImageProcessingResult(IFormFile image)
         {
             try
             {
                 MemoryStream stream = new MemoryStream();
                 await image.CopyToAsync(stream);
                 var result = await ImageProcessorService.GetImageResult(stream, image.FileName);
-                return result;
+                return new JsonResult(result);
             }
             catch (Exception e)
             {
                 Logger.Error(e.ToString());
-                return new List<double>();
+                return StatusCode(StatusCodes.Status500InternalServerError);
             }
         }
     }

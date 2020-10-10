@@ -4,12 +4,52 @@
         <name>GroupProject</name>
     </assembly>
     <members>
+        <member name="T:GroupProject.Controllers.AccountController">
+            <summary>
+            Работа с аккаунтом
+            </summary>
+        </member>
+        <member name="M:GroupProject.Controllers.AccountController.Register(GroupProject.Models.RegisterModel)">
+            <summary>
+            Регистрация пользователя
+            </summary>
+            <param name="model">Модель регистрации пользователя</param>
+            <returns>Результат регистрации</returns>
+            <response code="201">Пользователь зарегистрирован</response>
+            <response code="400">Модель регистрации некорректна</response>
+            <response code="500">Ошибка на сервере</response>
+        </member>
+        <member name="M:GroupProject.Controllers.AccountController.Login(System.String,System.String)">
+            <summary>
+            Аутентификация пользователя в системе
+            </summary>
+            <param name="username">Логин пользователя</param>
+            <param name="password">Пароль пользователя</param>
+            <returns>Токен для доступа к серверу</returns>
+            <response code="200">Пользователь аутентифицирован</response>
+            <response code="500">Ошибка сервера</response>
+        </member>
+        <member name="M:GroupProject.Controllers.AccountController.GetIdentity(System.String,System.String)">
+            <summary>
+            Получение идентификационной информации о пользователе
+            </summary>
+            <param name="username">Логин пользователя</param>
+            <param name="password">Пароль пользователя</param>
+            <returns>Идентификационная информация</returns>
+        </member>
+        <member name="T:GroupProject.Controllers.ImageProcessingController">
+            <summary>
+            Работа с изображениями
+            </summary>
+        </member>
         <member name="M:GroupProject.Controllers.ImageProcessingController.GetImageProcessingResult(Microsoft.AspNetCore.Http.IFormFile)">
             <summary>
             Получение результата обработки изображения
             </summary>
             <param name="image">Изображение для обработки</param>
             <returns>Результат обработки изображения</returns>
+            <response code="200">Обработка изображения выполнилась успешно</response>
+            <response code="500">Ошибка сервера</response>
         </member>
         <member name="M:GroupProject.Controllers.ValuesController.Get">
             <summary>
@@ -28,6 +68,36 @@
             <param name="image">Поток байт изображения</param>
             <param name="fileName">Название изображения</param>
             <returns>Результат обработки изображения</returns>
+        </member>
+        <member name="T:GroupProject.Models.RegisterModel">
+            <summary>
+            Модель регистрации пользователя
+            </summary>
+        </member>
+        <member name="P:GroupProject.Models.RegisterModel.FirstName">
+            <summary>
+            Имя пользователя
+            </summary>
+        </member>
+        <member name="P:GroupProject.Models.RegisterModel.Surname">
+            <summary>
+            Фамилия пользователя
+            </summary>
+        </member>
+        <member name="P:GroupProject.Models.RegisterModel.Patronym">
+            <summary>
+            Отчество
+            </summary>
+        </member>
+        <member name="P:GroupProject.Models.RegisterModel.Username">
+            <summary>
+            Логин пользователя
+            </summary>
+        </member>
+        <member name="P:GroupProject.Models.RegisterModel.Password">
+            <summary>
+            Пароль пользователя
+            </summary>
         </member>
     </members>
 </doc>
