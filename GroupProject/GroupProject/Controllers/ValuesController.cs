@@ -10,6 +10,7 @@ using System.Runtime.CompilerServices;
 using GroupProject.Database;
 using GroupProject.Database.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authorization;
 
 namespace GroupProject.Controllers
 {
@@ -44,6 +45,7 @@ namespace GroupProject.Controllers
 
         [HttpGet]
         [Route("get-all-users")]
+        [Authorize]
         public async Task<ActionResult<IEnumerable<User>>> GetUsers()
         {
             return await Context.Users.ToListAsync();

@@ -9,6 +9,7 @@ using GroupProject.AuthorizationAuthentication;
 using GroupProject.Database;
 using GroupProject.Logging;
 using GroupProject.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -45,6 +46,7 @@ namespace GroupProject.Controllers
         /// <response code="400">Модель регистрации некорректна</response>
         /// <response code="500">Ошибка на сервере</response>
         [HttpPost("register")]
+        [AllowAnonymous]
         public async Task<IActionResult> Register(RegisterModel model)
         {
             try
@@ -85,6 +87,7 @@ namespace GroupProject.Controllers
         /// <response code="200">Пользователь аутентифицирован</response>
         /// <response code="500">Ошибка сервера</response>
         [HttpPost("login")]
+        [AllowAnonymous]
         public async Task<IActionResult> Login(string username, string password)
         {
             try
@@ -156,8 +159,9 @@ namespace GroupProject.Controllers
             }
             catch (Exception e)
             {
-                Logger.Error(e.ToString());
-                return new ClaimsIdentity();
+                string exception = e.ToString();
+                Logger.Error(exception);
+                throw new Exception(exception);
             }
         }
     }

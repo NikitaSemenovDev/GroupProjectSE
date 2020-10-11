@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using GroupProject.ExternalServices;
 using GroupProject.Logging;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -35,6 +36,7 @@ namespace GroupProject.Controllers
         /// <response code="200">Обработка изображения выполнилась успешно</response>
         /// <response code="500">Ошибка сервера</response>
         [HttpPost("get-result")]
+        [AllowAnonymous]
         public async Task<IActionResult> GetImageProcessingResult(IFormFile image)
         {
             try
