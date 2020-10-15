@@ -43,7 +43,8 @@ namespace GroupProject.Controllers
         /// <param name="model">Модель регистрации пользователя</param>
         /// <returns>Результат регистрации</returns>
         /// <response code="201">Пользователь зарегистрирован</response>
-        /// <response code="400">Модель регистрации некорректна</response>
+        /// <response code="400">1. Модель регистрации некорректна.
+        /// 2. Пользователь с таким логином уже существует.</response>
         /// <response code="500">Ошибка на сервере</response>
         [HttpPost("register")]
         [AllowAnonymous]
@@ -54,6 +55,13 @@ namespace GroupProject.Controllers
                 if (!ModelState.IsValid)
                 {
                     return BadRequest();
+                }
+
+                DatabaseUser userToCheck = await Context.Users.FirstOrDefaultAsync(u => u.Username == model.Username);
+
+                if (userToCheck != null)
+                {
+                    return BadRequest(new { Error = "Пользователь с таким логином уже зарегистрирован!" });
                 }
 
                 DatabaseUser user = new DatabaseUser()

@@ -16,7 +16,8 @@
             <param name="model">Модель регистрации пользователя</param>
             <returns>Результат регистрации</returns>
             <response code="201">Пользователь зарегистрирован</response>
-            <response code="400">Модель регистрации некорректна</response>
+            <response code="400">1. Модель регистрации некорректна.
+            2. Пользователь с таким логином уже существует.</response>
             <response code="500">Ошибка на сервере</response>
         </member>
         <member name="M:GroupProject.Controllers.AccountController.Login(System.String,System.String)">
