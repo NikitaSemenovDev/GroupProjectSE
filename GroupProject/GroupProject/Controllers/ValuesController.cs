@@ -46,9 +46,9 @@ namespace GroupProject.Controllers
         [HttpGet]
         [Route("get-all-users")]
         [Authorize]
-        public async Task<ActionResult<IEnumerable<User>>> GetUsers()
+        public async Task<ActionResult<IEnumerable<Person>>> GetUsers()
         {
-            return await Context.Users.ToListAsync();
+            return await Context.People.ToListAsync();
         }
 
         // GET api/values/5

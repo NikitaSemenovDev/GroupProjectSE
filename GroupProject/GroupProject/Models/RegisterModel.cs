@@ -32,6 +32,13 @@ namespace GroupProject.Models
         public string Patronym { get; set; }
 
         /// <summary>
+        /// Электронная почта
+        /// </summary>
+        [Required(ErrorMessage = "Введите электронный ящик пользователя")]
+        [MaxLength(100, ErrorMessage = "Длина электронной почты может быть максимум 100 символов")]
+        public string Email { get; set; }
+
+        /// <summary>
         /// Логин пользователя
         /// </summary>
         [Required(ErrorMessage = "Введите логин пользователя")]

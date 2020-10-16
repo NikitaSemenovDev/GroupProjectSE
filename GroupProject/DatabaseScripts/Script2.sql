@@ -1,0 +1,68 @@
+USE GroupProject
+
+EXEC sp_rename 'User', 'Person';
+
+GO
+
+ALTER TABLE Person
+DROP CONSTRAINT UQ_Username;
+
+GO
+
+ALTER TABLE Person
+DROP COLUMN Username;
+
+ALTER TABLE Person
+DROP COLUMN [Password];
+
+ALTER TABLE Person
+ADD Email NVARCHAR(100) NOT NULL;
+
+ALTER TABLE Person
+ADD Discriminator NVARCHAR(128) NOT NULL;
+
+GO
+
+ALTER TABLE Person
+ADD CONSTRAINT UQ_Email UNIQUE(Email);
+
+GO
+
+CREATE TABLE [Role]
+(
+	Id INT PRIMARY KEY IDENTITY,
+	[Name] NVARCHAR(100) NOT NULL,
+	CONSTRAINT UQ_Name UNIQUE([Name])
+);
+
+GO
+
+INSERT INTO [Role]
+VALUES
+(N'User'),
+(N'Doctor'),
+(N'Administrator');
+
+GO
+
+CREATE TABLE Account
+(
+	Id INT PRIMARY KEY IDENTITY,
+	PersonId INT NULL,
+	RoleId INT NULL,
+	Username NVARCHAR(100) NOT NULL,
+	[Password] NVARCHAR(100) NOT NULL,
+	CONSTRAINT FK_Account_Person FOREIGN KEY (PersonId) REFERENCES Person (Id) ON DELETE SET NULL,
+	CONSTRAINT FK_Account_Role FOREIGN KEY (RoleId) REFERENCES [Role] (Id) ON DELETE SET NULL,
+	CONSTRAINT UQ_Username UNIQUE(Username)
+);
+
+CREATE TABLE ImageProcessingResult
+(
+	Id INT PRIMARY KEY IDENTITY,
+	PersonId INT NULL,
+	[Image] VARBINARY(MAX) NOT NULL,
+	ProcessingDateTime DATETIME2 NOT NULL,
+	ProcessingResult NVARCHAR(1000) NOT NULL
+	CONSTRAINT FK_ImageProcessingResult_Person FOREIGN KEY (PersonId) REFERENCES Person (Id) ON DELETE SET NULL
+);

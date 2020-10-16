@@ -14,7 +14,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
-using DatabaseUser = GroupProject.Database.Models.User;
+using PersonRole = GroupProject.Database.Enumerations.Role;
+using GroupProject.Database.Models;
 
 namespace GroupProject.Controllers
 {
@@ -57,23 +58,39 @@ namespace GroupProject.Controllers
                     return BadRequest();
                 }
 
-                DatabaseUser userToCheck = await Context.Users.FirstOrDefaultAsync(u => u.Username == model.Username);
+                Person personToCheck = await Context.People.FirstOrDefaultAsync(p => p.Email == model.Email);
 
-                if (userToCheck != null)
+                if (personToCheck != null)
+                {
+                    return BadRequest(new { Error = "Пользователь с такой электронной почтой уже зарегистрирован" });
+                }
+
+                Account accountToCheck = await Context.Accounts.FirstOrDefaultAsync(u => u.Username == model.Username);
+
+                if (accountToCheck != null)
                 {
                     return BadRequest(new { Error = "Пользователь с таким логином уже зарегистрирован!" });
                 }
 
-                DatabaseUser user = new DatabaseUser()
+                Person user = new Person()
                 {
                     FirstName = model.FirstName,
                     Surname = model.Surname,
                     Patronym = model.Patronym,
-                    Username = model.Username,
-                    Password = model.Password
+                    Email = model.Email
                 };
 
                 Context.Add(user);
+                await Context.SaveChangesAsync();
+
+                Account account = new Account()
+                {
+                    Username = model.Username,
+                    Password = model.Password,
+                    Person = user,
+                    Role = await Context.Roles.FirstOrDefaultAsync(r => r.Id == (int)PersonRole.User)
+                };
+                Context.Add(account);
                 await Context.SaveChangesAsync();
 
                 return StatusCode(StatusCodes.Status201Created);
@@ -125,7 +142,7 @@ namespace GroupProject.Controllers
                 var response = new
                 {
                     access_token = encodedJwt,
-                    username = identity.Name
+                    username = identity.Name,
                 };
 
                 return new JsonResult(response);
@@ -148,16 +165,18 @@ namespace GroupProject.Controllers
         {
             try
             {
-                DatabaseUser user = await Context.Users.FirstOrDefaultAsync(u => u.Username == username && u.Password == password);
-                if (user == null)
+                Account account = await Context.Accounts.Include(a => a.Role)
+                    .FirstOrDefaultAsync(a => a.Username == username && a.Password == password);
+                
+                if (account == null)
                 {
                     return null;
                 }
 
                 List<Claim> claims = new List<Claim>()
                 {
-                    new Claim(ClaimsIdentity.DefaultNameClaimType, user.Username),
-                    new Claim(ClaimsIdentity.DefaultRoleClaimType, "user")
+                    new Claim(ClaimsIdentity.DefaultNameClaimType, account.Username),
+                    new Claim(ClaimsIdentity.DefaultRoleClaimType, account.Role.Name)
                 };
 
                 ClaimsIdentity claimsIdentity =

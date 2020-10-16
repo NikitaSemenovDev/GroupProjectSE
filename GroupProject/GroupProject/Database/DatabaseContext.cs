@@ -13,11 +13,18 @@ namespace GroupProject.Database
         { 
         }
 
+        public DbSet<Person> People { get; set; }
         public DbSet<User> Users { get; set; }
+        public DbSet<Account> Accounts { get; set; }
+        public DbSet<Role> Roles { get; set; }
+        public DbSet<ImageProcessingResult> ImageProcessingResult { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<User>().ToTable("User");
+            modelBuilder.Entity<Person>().ToTable("Person");
+            modelBuilder.Entity<Account>().ToTable("Account");
+            modelBuilder.Entity<Role>().ToTable("Role");
+            modelBuilder.Entity<ImageProcessingResult>().ToTable("ImageProcessingResult");
         }
     }
 }

@@ -5,8 +5,10 @@ using System.Threading.Tasks;
 
 namespace GroupProject.Database.Models
 {
-    public class User : Person
+    public class Role
     {
+        public int Id { get; set; }
 
+        public string Name { get; set; }
     }
 }

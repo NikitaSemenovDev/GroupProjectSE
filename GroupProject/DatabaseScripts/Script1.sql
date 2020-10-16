@@ -10,9 +10,7 @@ CREATE TABLE [User]
 	FirstName NVARCHAR(100) NOT NULL,
 	Surname NVARCHAR(100) NOT NULL,
 	Patronym NVARCHAR(100) NULL,
-	Username NVARCHAR(100) UNIQUE NOT NULL,
-	[Password] NVARCHAR(100) NOT NULL
+	Username NVARCHAR(100) NOT NULL,
+	[Password] NVARCHAR(100) NOT NULL,
+	CONSTRAINT UQ_Username UNIQUE(Username)
 );
-
-INSERT INTO [User] (FirstName, Surname, Patronym, Username, [Password])
-VALUES ('Test', 'Test', 'Test', 'Test', 'Test');

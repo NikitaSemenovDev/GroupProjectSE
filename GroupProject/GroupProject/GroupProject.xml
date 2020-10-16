@@ -62,6 +62,31 @@
             </remarks>
             <returns></returns>
         </member>
+        <member name="T:GroupProject.Database.Enumerations.Role">
+            <summary>
+            Роли пользователей системы
+            </summary>
+        </member>
+        <member name="F:GroupProject.Database.Enumerations.Role.User">
+            <summary>
+            Клиент
+            </summary>
+        </member>
+        <member name="F:GroupProject.Database.Enumerations.Role.Doctor">
+            <summary>
+            Доктор
+            </summary>
+        </member>
+        <member name="F:GroupProject.Database.Enumerations.Role.Administrator">
+            <summary>
+            Администратор
+            </summary>
+        </member>
+        <member name="P:GroupProject.Database.Models.ImageProcessingResult.ProcessingResult">
+            <summary>
+            JSON-массив чисел
+            </summary>
+        </member>
         <member name="M:GroupProject.ExternalServices.ImageProcessorService.GetImageResult(System.IO.MemoryStream,System.String)">
             <summary>
             Получение результата обработки изображения
@@ -88,6 +113,11 @@
         <member name="P:GroupProject.Models.RegisterModel.Patronym">
             <summary>
             Отчество
+            </summary>
+        </member>
+        <member name="P:GroupProject.Models.RegisterModel.Email">
+            <summary>
+            Электронная почта
             </summary>
         </member>
         <member name="P:GroupProject.Models.RegisterModel.Username">
