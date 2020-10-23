@@ -9,9 +9,9 @@ namespace GroupProject.Database.Models
     {
         public int Id { get; set; }
 
-        public int? PersonId { get; set; }
+        public int? AccountId { get; set; }
 
-        public Person Person { get; set; }
+        public Account Account { get; set; }
 
         public byte[] Image { get; set; }
 

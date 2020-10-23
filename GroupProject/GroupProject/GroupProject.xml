@@ -38,6 +38,24 @@
             <param name="password">Пароль пользователя</param>
             <returns>Идентификационная информация</returns>
         </member>
+        <member name="M:GroupProject.Controllers.AccountController.GetImages">
+            <summary>
+            Получение истории обработок изображений
+            </summary>
+            <returns>История обработок изображений</returns>
+            <response code="200">История обработок изображений получена</response>
+            <response code="500">Ошибка сервера</response>
+        </member>
+        <member name="M:GroupProject.Controllers.AccountController.DeleteImage(System.Int32)">
+            <summary>
+            Удаление результата обработки изображения
+            </summary>
+            <param name="id">Идентификатор результата обработки изображения, который необходимо удалить</param>
+            <returns>Результат удаления результата обработки изображения</returns>
+            <response code="204">Удаление успешно выполнено</response>
+            <response code="400">Результат обработки изображения не найден</response>
+            <response code="500">Ошибка сервера</response>
+        </member>
         <member name="T:GroupProject.Controllers.ImageProcessingController">
             <summary>
             Работа с изображениями
@@ -128,6 +146,31 @@
         <member name="P:GroupProject.Models.RegisterModel.Password">
             <summary>
             Пароль пользователя
+            </summary>
+        </member>
+        <member name="T:GroupProject.Models.ServiceImageProcessingResult">
+            <summary>
+            Модель результата обработки изображения в сервисе
+            </summary>
+        </member>
+        <member name="P:GroupProject.Models.ServiceImageProcessingResult.Id">
+            <summary>
+            Идентификатор результата обработки изображения
+            </summary>
+        </member>
+        <member name="P:GroupProject.Models.ServiceImageProcessingResult.ProcessingDateTime">
+            <summary>
+            Время обработки изображения
+            </summary>
+        </member>
+        <member name="P:GroupProject.Models.ServiceImageProcessingResult.Image">
+            <summary>
+            Обрабатываемое изображение
+            </summary>
+        </member>
+        <member name="P:GroupProject.Models.ServiceImageProcessingResult.ProcessingResult">
+            <summary>
+            Результат обработки изображения
             </summary>
         </member>
     </members>

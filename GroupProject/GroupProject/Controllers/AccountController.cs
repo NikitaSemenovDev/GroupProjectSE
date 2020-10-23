@@ -15,7 +15,10 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using PersonRole = GroupProject.Database.Enumerations.Role;
+using DatabaseImageProcessingResult = GroupProject.Database.Models.ImageProcessingResult;
 using GroupProject.Database.Models;
+using Newtonsoft.Json;
+using GroupProject.ActionResults;
 
 namespace GroupProject.Controllers
 {
@@ -49,6 +52,9 @@ namespace GroupProject.Controllers
         /// <response code="500">Ошибка на сервере</response>
         [HttpPost("register")]
         [AllowAnonymous]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> Register(RegisterModel model)
         {
             try
@@ -58,13 +64,6 @@ namespace GroupProject.Controllers
                     return BadRequest();
                 }
 
-                Person personToCheck = await Context.People.FirstOrDefaultAsync(p => p.Email == model.Email);
-
-                if (personToCheck != null)
-                {
-                    return BadRequest(new { Error = "Пользователь с такой электронной почтой уже зарегистрирован" });
-                }
-
                 Account accountToCheck = await Context.Accounts.FirstOrDefaultAsync(u => u.Username == model.Username);
 
                 if (accountToCheck != null)
@@ -72,22 +71,27 @@ namespace GroupProject.Controllers
                     return BadRequest(new { Error = "Пользователь с таким логином уже зарегистрирован!" });
                 }
 
-                Person user = new Person()
-                {
-                    FirstName = model.FirstName,
-                    Surname = model.Surname,
-                    Patronym = model.Patronym,
-                    Email = model.Email
-                };
+                Person person = await Context.People.FirstOrDefaultAsync(p => p.Email == model.Email);
 
-                Context.Add(user);
-                await Context.SaveChangesAsync();
+                if (person == null)
+                {
+                    person = new User()
+                    {
+                        FirstName = model.FirstName,
+                        Surname = model.Surname,
+                        Patronym = model.Patronym,
+                        Email = model.Email
+                    };
+
+                    Context.Add(person);
+                    await Context.SaveChangesAsync();
+                }
 
                 Account account = new Account()
                 {
                     Username = model.Username,
                     Password = model.Password,
-                    Person = user,
+                    Person = person,
                     Role = await Context.Roles.FirstOrDefaultAsync(r => r.Id == (int)PersonRole.User)
                 };
                 Context.Add(account);
@@ -113,6 +117,8 @@ namespace GroupProject.Controllers
         /// <response code="500">Ошибка сервера</response>
         [HttpPost("login")]
         [AllowAnonymous]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> Login(string username, string password)
         {
             try
@@ -189,6 +195,92 @@ namespace GroupProject.Controllers
                 string exception = e.ToString();
                 Logger.Error(exception);
                 throw new Exception(exception);
+            }
+        }
+
+        /// <summary>
+        /// Получение истории обработок изображений
+        /// </summary>
+        /// <returns>История обработок изображений</returns>
+        /// <response code="200">История обработок изображений получена</response>
+        /// <response code="500">Ошибка сервера</response>
+        [HttpGet("images")]
+        [Authorize]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> GetImages()
+        {
+            try
+            {
+                var databaseImages = await Context.ImageProcessingResults.AsNoTracking()
+                   .Where(r => r.Account.Username == User.Identity.Name)
+                   .Select(r => new
+                   {
+                       Id = r.Id,
+                       ProcessingDateTime = r.ProcessingDateTime,
+                       Image = r.Image,
+                       ProcessingResult = r.ProcessingResult
+                   })
+                   .ToListAsync();
+
+                var images = databaseImages
+                    .Select(i => new ServiceImageProcessingResult()
+                    {
+                        Id = i.Id,
+                        ProcessingDateTime = i.ProcessingDateTime,
+                        Image = i.Image,
+                        ProcessingResult = JsonConvert.DeserializeObject<double[]>(i.ProcessingResult)
+                    });
+
+                var response = new
+                {
+                    data = images
+                };
+
+                return new ProjectJsonResult(response);
+            }
+            catch (Exception e)
+            {
+                Logger.Error(e.ToString());
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
+        }
+
+
+        /// <summary>
+        /// Удаление результата обработки изображения
+        /// </summary>
+        /// <param name="id">Идентификатор результата обработки изображения, который необходимо удалить</param>
+        /// <returns>Результат удаления результата обработки изображения</returns>
+        /// <response code="204">Удаление успешно выполнено</response>
+        /// <response code="400">Результат обработки изображения не найден</response>
+        /// <response code="500">Ошибка сервера</response>
+        [HttpDelete("images/{id:int}")]
+        [Authorize]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> DeleteImage(int id)
+        {
+            try
+            {
+                var imageToDelete = await Context.ImageProcessingResults
+                    .FirstOrDefaultAsync(r => r.Id == id);
+
+                if (imageToDelete == null)
+                {
+                    return BadRequest(new { error = "Результат обработки изображения с указанным идентификатором не найден." });
+                }
+
+                Context.ImageProcessingResults.Remove(imageToDelete);
+                await Context.SaveChangesAsync();
+
+                return NoContent();
+            }
+            catch (Exception e)
+            {
+                Logger.Error(e.ToString());
+                return StatusCode(StatusCodes.Status500InternalServerError);
             }
         }
     }

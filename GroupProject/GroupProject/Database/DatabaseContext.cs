@@ -17,7 +17,7 @@ namespace GroupProject.Database
         public DbSet<User> Users { get; set; }
         public DbSet<Account> Accounts { get; set; }
         public DbSet<Role> Roles { get; set; }
-        public DbSet<ImageProcessingResult> ImageProcessingResult { get; set; }
+        public DbSet<ImageProcessingResult> ImageProcessingResults { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

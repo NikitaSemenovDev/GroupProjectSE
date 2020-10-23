@@ -98,6 +98,8 @@ namespace GroupProject
 
             services.AddHttpClient<ImageProcessorService>();
 
+            services.AddHttpContextAccessor();
+
             services.AddDbContext<DatabaseContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("DatabaseContext")));
 

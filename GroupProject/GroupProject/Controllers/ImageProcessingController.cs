@@ -2,12 +2,17 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net.Mime;
+using System.Text;
 using System.Threading.Tasks;
+using GroupProject.ActionResults;
 using GroupProject.ExternalServices;
 using GroupProject.Logging;
+using GroupProject.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 
 namespace GroupProject.Controllers
 {
@@ -37,14 +42,20 @@ namespace GroupProject.Controllers
         /// <response code="500">Ошибка сервера</response>
         [HttpPost("get-result")]
         [AllowAnonymous]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> GetImageProcessingResult(IFormFile image)
         {
             try
             {
+                if (image == null)
+                {
+                    return BadRequest();
+                }
                 MemoryStream stream = new MemoryStream();
                 await image.CopyToAsync(stream);
                 var result = await ImageProcessorService.GetImageResult(stream, image.FileName);
-                return new JsonResult(result);
+                return new ProjectJsonResult(result);
             }
             catch (Exception e)
             {
