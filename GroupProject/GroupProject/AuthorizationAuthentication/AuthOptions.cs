@@ -11,7 +11,7 @@ namespace GroupProject.AuthorizationAuthentication
     {
         public const string Issuer = "WebApiAuthServer";
         public const string Audience = "WebApiAuthClient";
-        public const int Lifetime = 1;
+        public const int Lifetime = 10;
 
         private const string Key = "TestEncryptingKey";
 

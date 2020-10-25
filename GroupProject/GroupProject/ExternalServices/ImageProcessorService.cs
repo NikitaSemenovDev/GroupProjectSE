@@ -36,7 +36,7 @@ namespace GroupProject.ExternalServices
             Client.BaseAddress = new Uri(configuration.GetSection("ExternalServices:ImageProcessorServiceUrl").Value);
             Logger = logger;
             Context = context;
-            AuthenticatedUser = httpContextAccessor.HttpContext.User;
+            AuthenticatedUser = httpContextAccessor.HttpContext?.User;
         }
 
 
@@ -63,7 +63,7 @@ namespace GroupProject.ExternalServices
 
                 var imageProcessingResult = JsonConvert.DeserializeObject<ServiceImageProcessingResult>(responseContent);
 
-                if (AuthenticatedUser != null)
+                if (AuthenticatedUser != null && AuthenticatedUser.Identity.IsAuthenticated)
                 {
                     DatabaseImageProcessingResult result = new DatabaseImageProcessingResult()
                     {
