@@ -17,5 +17,7 @@ namespace GroupProject.Database.Models
         public string Patronym { get; set; }
 
         public string Email { get; set; }
+
+        public List<Account> Accounts { get; set; }
     }
 }

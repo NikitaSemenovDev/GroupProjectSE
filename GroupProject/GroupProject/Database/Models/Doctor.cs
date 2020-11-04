@@ -5,8 +5,8 @@ using System.Threading.Tasks;
 
 namespace GroupProject.Database.Models
 {
-    public class User : Person
+    public class Doctor : Person
     {
-
+        public int WorkExperience { get; set; }
     }
 }

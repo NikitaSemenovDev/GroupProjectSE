@@ -40,6 +40,9 @@ namespace GroupProject.Controllers
         [HttpGet]
         public ActionResult<IEnumerable<string>> Get()
         {
+            var test = Context.People.Include(p => p.Accounts).ToList();
+            var test1 = Context.DoctorPatients.Include(d => d.Account).ThenInclude(a => a.Person).Include(d => d.LinkedAccount).ToList();
+            var test_ = Context.Accounts.Include(a => a.LinkedAccounts).ToList();
             return new string[] { "value1", "value2" };
         }
 

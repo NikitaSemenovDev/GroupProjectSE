@@ -75,7 +75,7 @@ namespace GroupProject.Controllers
 
                 if (person == null)
                 {
-                    person = new User()
+                    person = new Patient()
                     {
                         FirstName = model.FirstName,
                         Surname = model.Surname,

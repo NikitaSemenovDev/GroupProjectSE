@@ -14,8 +14,10 @@ namespace GroupProject.Database
         }
 
         public DbSet<Person> People { get; set; }
-        public DbSet<User> Users { get; set; }
+        public DbSet<Patient> Patients { get; set; }
+        public DbSet<Doctor> Doctors { get; set; }
         public DbSet<Account> Accounts { get; set; }
+        public DbSet<DoctorPatient> DoctorPatients { get; set; }
         public DbSet<Role> Roles { get; set; }
         public DbSet<ImageProcessingResult> ImageProcessingResults { get; set; }
 
@@ -23,8 +25,14 @@ namespace GroupProject.Database
         {
             modelBuilder.Entity<Person>().ToTable("Person");
             modelBuilder.Entity<Account>().ToTable("Account");
+            modelBuilder.Entity<DoctorPatient>().ToTable("DoctorPatient");
             modelBuilder.Entity<Role>().ToTable("Role");
             modelBuilder.Entity<ImageProcessingResult>().ToTable("ImageProcessingResult");
+
+            modelBuilder.Entity<Account>()
+                .HasMany(a => a.LinkedAccounts)
+                .WithOne(dp => dp.Account)
+                .HasForeignKey(dp => dp.AccountId);
         }
     }
 }
