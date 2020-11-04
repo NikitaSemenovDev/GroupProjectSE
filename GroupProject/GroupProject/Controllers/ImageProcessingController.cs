@@ -44,10 +44,12 @@ namespace GroupProject.Controllers
         /// <param name="image">Изображение для обработки</param>
         /// <returns>Результат обработки изображения</returns>
         /// <response code="200">Обработка изображения выполнилась успешно</response>
+        /// <response code="400">Не удалось получить изображение</response>
         /// <response code="500">Ошибка сервера</response>
         [HttpPost("get-result")]
         [AllowAnonymous]
         [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> GetImageProcessingResult(IFormFile image)
         {

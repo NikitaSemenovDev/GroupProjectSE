@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using GroupProject.ActionResults;
 using GroupProject.Database;
 using GroupProject.Database.Models;
 using GroupProject.ExternalServices;
@@ -15,6 +16,9 @@ using Newtonsoft.Json;
 
 namespace GroupProject.Controllers
 {
+    /// <summary>
+    /// Работа с докторами
+    /// </summary>
     [Produces("application/json")]
     [Route("api")]
     [ApiController]
@@ -32,9 +36,22 @@ namespace GroupProject.Controllers
         }
 
 
-
+        /// <summary>
+        /// Загрузка изображения пациента
+        /// </summary>
+        /// <param name="image">Изображение для загрузки</param>
+        /// <param name="id">Идентификатор аккаунта пациента</param>
+        /// <returns>Результат загрузки изображения</returns>
+        /// <response code="200">Изображение загружено</response>
+        /// <response code="400">1. Не удалось получить изображение
+        /// 2. Указанный аккаунт не существует
+        /// 3. Указанный аккаунт принадлежит не пациенту</response>
+        /// <response code="500">Ошибка сервера</response>
         [HttpPost("doctor/patients/{id:int}/images")]
         [Authorize(Roles = "Doctor")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> UpdoadImage(IFormFile image, int id)
         {
             try
@@ -43,6 +60,19 @@ namespace GroupProject.Controllers
                 {
                     return BadRequest();
                 }
+
+                var patient = await Context.Accounts.Include(a => a.Person).FirstOrDefaultAsync(a => a.Id == id);
+
+                if (patient == null)
+                {
+                    return BadRequest(new { Error = "Указанный аккаунт не существует." });
+                }
+
+                if (!(patient.Person is Patient))
+                {
+                    return BadRequest(new { Error = "Указанный аккаунт принадлежит не пациенту." });
+                }
+
                 MemoryStream stream = new MemoryStream();
                 await image.CopyToAsync(stream);
                 var imageProcessingResult = await ImageProcessorService.GetImageResult(stream, image.FileName);
@@ -57,12 +87,14 @@ namespace GroupProject.Controllers
                 Context.Add(result);
                 await Context.SaveChangesAsync();
 
-                return StatusCode(StatusCodes.Status201Created);
+                imageProcessingResult.Id = result.Id;
+
+                return new ProjectJsonResult(imageProcessingResult);
             }
             catch (Exception e)
             {
                 Logger.Error(e.ToString());
-                throw;
+                return StatusCode(StatusCodes.Status500InternalServerError);
             }
         }
     }

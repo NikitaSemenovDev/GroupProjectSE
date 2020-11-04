@@ -49,6 +49,24 @@
             <param name="password">Пароль пользователя</param>
             <returns>Идентификационная информация</returns>
         </member>
+        <member name="T:GroupProject.Controllers.DoctorsController">
+            <summary>
+            Работа с докторами
+            </summary>
+        </member>
+        <member name="M:GroupProject.Controllers.DoctorsController.UpdoadImage(Microsoft.AspNetCore.Http.IFormFile,System.Int32)">
+            <summary>
+            Загрузка изображения пациента
+            </summary>
+            <param name="image">Изображение для загрузки</param>
+            <param name="id">Идентификатор аккаунта пациента</param>
+            <returns>Результат загрузки изображения</returns>
+            <response code="200">Изображение загружено</response>
+            <response code="400">1. Не удалось получить изображение
+            2. Указанный аккаунт не существует
+            3. Указанный аккаунт принадлежит не пациенту</response>
+            <response code="500">Ошибка сервера</response>
+        </member>
         <member name="T:GroupProject.Controllers.ImageProcessingController">
             <summary>
             Работа с изображениями
@@ -61,6 +79,7 @@
             <param name="image">Изображение для обработки</param>
             <returns>Результат обработки изображения</returns>
             <response code="200">Обработка изображения выполнилась успешно</response>
+            <response code="400">Не удалось получить изображение</response>
             <response code="500">Ошибка сервера</response>
         </member>
         <member name="T:GroupProject.Controllers.PatientsController">
@@ -74,6 +93,7 @@
             </summary>
             <returns>История обработок изображений</returns>
             <response code="200">История обработок изображений получена</response>
+            <response code="400">Некорректный запрос</response>
             <response code="500">Ошибка сервера</response>
         </member>
         <member name="M:GroupProject.Controllers.PatientsController.DeleteImage(System.Int32)">
@@ -84,6 +104,18 @@
             <returns>Результат удаления результата обработки изображения</returns>
             <response code="204">Удаление успешно выполнено</response>
             <response code="400">Результат обработки изображения не найден</response>
+            <response code="500">Ошибка сервера</response>
+        </member>
+        <member name="M:GroupProject.Controllers.PatientsController.GetImages(System.Int32)">
+            <summary>
+            Получение результатов обработок изображений пациента
+            </summary>
+            <param name="id">Идентификатор пациента</param>
+            <returns>Результаты обработок изображений пациента</returns>
+            <response code="200">Успешное получение результатов обработок изображений</response>
+            <response code="400">1. Некорректный запрос
+            2. Аккаунт с указанным идентификатором не найден
+            3. Указанный аккаунт принадлежит не пользователю</response>
             <response code="500">Ошибка сервера</response>
         </member>
         <member name="M:GroupProject.Controllers.ValuesController.Get">

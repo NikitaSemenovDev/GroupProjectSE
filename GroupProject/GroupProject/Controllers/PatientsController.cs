@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using GroupProject.ActionResults;
 using GroupProject.Database;
+using GroupProject.Database.Models;
 using GroupProject.Logging;
 using GroupProject.Models;
 using Microsoft.AspNetCore.Authorization;
@@ -39,10 +40,12 @@ namespace GroupProject.Controllers
         /// </summary>
         /// <returns>История обработок изображений</returns>
         /// <response code="200">История обработок изображений получена</response>
+        /// <response code="400">Некорректный запрос</response>
         /// <response code="500">Ошибка сервера</response>
         [HttpGet("patient/images")]
         [Authorize(Roles = "Patient")]
         [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> GetImages()
         {
@@ -112,6 +115,71 @@ namespace GroupProject.Controllers
                 await Context.SaveChangesAsync();
 
                 return NoContent();
+            }
+            catch (Exception e)
+            {
+                Logger.Error(e.ToString());
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
+        }
+
+
+        /// <summary>
+        /// Получение результатов обработок изображений пациента
+        /// </summary>
+        /// <param name="id">Идентификатор пациента</param>
+        /// <returns>Результаты обработок изображений пациента</returns>
+        /// <response code="200">Успешное получение результатов обработок изображений</response>
+        /// <response code="400">1. Некорректный запрос
+        /// 2. Аккаунт с указанным идентификатором не найден
+        /// 3. Указанный аккаунт принадлежит не пользователю</response>
+        /// <response code="500">Ошибка сервера</response>
+        [HttpGet("patient/{id:int}/images")]
+        [Authorize(Roles = "Doctor")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> GetImages(int id)
+        {
+            try
+            {
+                var patient = await Context.Accounts.Include(a => a.Person).FirstOrDefaultAsync(a => a.Id == id);
+
+                if (patient == null)
+                {
+                    return BadRequest(new { Error = "Аккаунт с указанным идентификатором не найден." });
+                }
+
+                if (!(patient.Person is Patient))
+                {
+                    return BadRequest(new { Error = "Указанный аккаунт принадлежит не пациенту." });
+                }
+
+                var databaseImages = await Context.ImageProcessingResults.AsNoTracking()
+                    .Where(i => i.AccountId == id)
+                    .Select(i => new
+                    {
+                        Id = i.Id,
+                        ProcessingDateTime = i.ProcessingDateTime,
+                        Image = i.Image,
+                        ProcessingResult = i.ProcessingResult
+                    }).ToListAsync();
+
+                var images = databaseImages
+                    .Select(i => new ServiceImageProcessingResult()
+                    {
+                        Id = i.Id,
+                        ProcessingDateTime = i.ProcessingDateTime,
+                        Image = i.Image,
+                        ProcessingResult = JsonConvert.DeserializeObject<double[]>(i.ProcessingResult)
+                    });
+
+                var response = new
+                {
+                    data = images
+                };
+
+                return new ProjectJsonResult(response);
             }
             catch (Exception e)
             {
