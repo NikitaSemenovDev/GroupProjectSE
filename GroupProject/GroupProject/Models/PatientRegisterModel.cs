@@ -7,26 +7,26 @@ using System.Threading.Tasks;
 namespace GroupProject.Models
 {
     /// <summary>
-    /// Модель регистрации пользователя
+    /// Модель регистрации пациента
     /// </summary>
-    public class RegisterModel
+    public class PatientRegisterModel
     {
         /// <summary>
-        /// Имя пользователя
+        /// Имя пациента
         /// </summary>
-        [Required(ErrorMessage = "Введите имя пользователя")]
+        [Required(ErrorMessage = "Введите имя пациента")]
         [MaxLength(100, ErrorMessage = "Длина имени может быть максимум 100 символов")]
         public string FirstName { get; set; }
 
         /// <summary>
-        /// Фамилия пользователя
+        /// Фамилия пациента
         /// </summary>
-        [Required(ErrorMessage = "Введите фамилию пользователя")]
+        [Required(ErrorMessage = "Введите фамилию пациента")]
         [MaxLength(100, ErrorMessage = "Длина фамилии может быть максимум 100 символов")]
         public string Surname { get; set; }
 
         /// <summary>
-        /// Отчество
+        /// Отчество пациента
         /// </summary>
         [MaxLength(100, ErrorMessage = "Длина отчества может быть максимум 100 символов")]
         public string Patronym { get; set; }
@@ -34,21 +34,26 @@ namespace GroupProject.Models
         /// <summary>
         /// Электронная почта
         /// </summary>
-        [Required(ErrorMessage = "Введите электронный ящик пользователя")]
+        [Required(ErrorMessage = "Введите электронный ящик пациента")]
         [MaxLength(100, ErrorMessage = "Длина электронной почты может быть максимум 100 символов")]
         public string Email { get; set; }
 
         /// <summary>
-        /// Логин пользователя
+        /// Номер медицинской карты пациента
         /// </summary>
-        [Required(ErrorMessage = "Введите логин пользователя")]
+        public int? MedicalRecordNumber { get; set; }
+
+        /// <summary>
+        /// Логин пациента
+        /// </summary>
+        [Required(ErrorMessage = "Введите логин пациента")]
         [MaxLength(100, ErrorMessage = "Длина логина может быть максимум 100 символов")]
         public string Username { get; set; }
 
         /// <summary>
-        /// Пароль пользователя
+        /// Пароль пациента
         /// </summary>
-        [Required(ErrorMessage = "Введите пароль пользователя")]
+        [Required(ErrorMessage = "Введите пароль пациента")]
         [MaxLength(100, ErrorMessage = "Длина пароля может быть максимум 100 символов")]
         public string Password { get; set; }
     }

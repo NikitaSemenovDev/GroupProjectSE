@@ -7,6 +7,6 @@ namespace GroupProject.Database.Models
 {
     public class Patient : Person
     {
-        public int MedicalRecordNumber { get; set; }
+        public int? MedicalRecordNumber { get; set; }
     }
 }

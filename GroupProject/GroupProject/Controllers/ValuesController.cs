@@ -38,6 +38,8 @@ namespace GroupProject.Controllers
         /// <returns></returns>
         // GET api/values
         [HttpGet]
+        [AllowAnonymous]
+        [Authorize(Roles = "Patient")]
         public ActionResult<IEnumerable<string>> Get()
         {
             var test = Context.People.Include(p => p.Accounts).ToList();
@@ -48,7 +50,7 @@ namespace GroupProject.Controllers
 
         [HttpGet]
         [Route("get-all-users")]
-        [Authorize]
+        [Authorize(Roles = "Doctor")]
         public async Task<ActionResult<IEnumerable<Person>>> GetUsers()
         {
             return await Context.People.ToListAsync();
@@ -56,6 +58,8 @@ namespace GroupProject.Controllers
 
         // GET api/values/5
         [HttpGet("{id}")]
+        [Authorize(Roles = "Patient")]
+        [AllowAnonymous]
         public ActionResult<string> Get(int id)
         {
             return "value";

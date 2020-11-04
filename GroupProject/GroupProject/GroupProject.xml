@@ -9,15 +9,26 @@
             Работа с аккаунтом
             </summary>
         </member>
-        <member name="M:GroupProject.Controllers.AccountController.Register(GroupProject.Models.RegisterModel)">
+        <member name="M:GroupProject.Controllers.AccountController.Register(GroupProject.Models.PatientRegisterModel)">
             <summary>
-            Регистрация пользователя
+            Регистрация пацента
             </summary>
-            <param name="model">Модель регистрации пользователя</param>
+            <param name="model">Модель регистрации пациента</param>
             <returns>Результат регистрации</returns>
-            <response code="201">Пользователь зарегистрирован</response>
+            <response code="201">Пациент зарегистрирован</response>
             <response code="400">1. Модель регистрации некорректна.
-            2. Пользователь с таким логином уже существует.</response>
+            2. Пациент с таким логином уже существует.</response>
+            <response code="500">Ошибка на сервере</response>
+        </member>
+        <member name="M:GroupProject.Controllers.AccountController.Register(GroupProject.Models.DoctorRegisterModel)">
+            <summary>
+            Регистрация доктора
+            </summary>
+            <param name="model">Модель регистрации доктора</param>
+            <returns>Результат регистрации</returns>
+            <response code="201">Доктор зарегистрирован</response>
+            <response code="400">1. Модель регистрации некорректна.
+            2. Доктор с таким логином уже существует.</response>
             <response code="500">Ошибка на сервере</response>
         </member>
         <member name="M:GroupProject.Controllers.AccountController.Login(System.String,System.String)">
@@ -38,24 +49,6 @@
             <param name="password">Пароль пользователя</param>
             <returns>Идентификационная информация</returns>
         </member>
-        <member name="M:GroupProject.Controllers.AccountController.GetImages">
-            <summary>
-            Получение истории обработок изображений
-            </summary>
-            <returns>История обработок изображений</returns>
-            <response code="200">История обработок изображений получена</response>
-            <response code="500">Ошибка сервера</response>
-        </member>
-        <member name="M:GroupProject.Controllers.AccountController.DeleteImage(System.Int32)">
-            <summary>
-            Удаление результата обработки изображения
-            </summary>
-            <param name="id">Идентификатор результата обработки изображения, который необходимо удалить</param>
-            <returns>Результат удаления результата обработки изображения</returns>
-            <response code="204">Удаление успешно выполнено</response>
-            <response code="400">Результат обработки изображения не найден</response>
-            <response code="500">Ошибка сервера</response>
-        </member>
         <member name="T:GroupProject.Controllers.ImageProcessingController">
             <summary>
             Работа с изображениями
@@ -68,6 +61,29 @@
             <param name="image">Изображение для обработки</param>
             <returns>Результат обработки изображения</returns>
             <response code="200">Обработка изображения выполнилась успешно</response>
+            <response code="500">Ошибка сервера</response>
+        </member>
+        <member name="T:GroupProject.Controllers.PatientsController">
+            <summary>
+            Работа с пациентами
+            </summary>
+        </member>
+        <member name="M:GroupProject.Controllers.PatientsController.GetImages">
+            <summary>
+            Получение истории обработок изображений
+            </summary>
+            <returns>История обработок изображений</returns>
+            <response code="200">История обработок изображений получена</response>
+            <response code="500">Ошибка сервера</response>
+        </member>
+        <member name="M:GroupProject.Controllers.PatientsController.DeleteImage(System.Int32)">
+            <summary>
+            Удаление результата обработки изображения
+            </summary>
+            <param name="id">Идентификатор результата обработки изображения, который необходимо удалить</param>
+            <returns>Результат удаления результата обработки изображения</returns>
+            <response code="204">Удаление успешно выполнено</response>
+            <response code="400">Результат обработки изображения не найден</response>
             <response code="500">Ошибка сервера</response>
         </member>
         <member name="M:GroupProject.Controllers.ValuesController.Get">
@@ -113,39 +129,79 @@
             <param name="fileName">Название изображения</param>
             <returns>Результат обработки изображения</returns>
         </member>
-        <member name="T:GroupProject.Models.RegisterModel">
+        <member name="T:GroupProject.Models.DoctorRegisterModel">
             <summary>
-            Модель регистрации пользователя
+            Модель регистрации доктора
             </summary>
         </member>
-        <member name="P:GroupProject.Models.RegisterModel.FirstName">
+        <member name="P:GroupProject.Models.DoctorRegisterModel.FirstName">
             <summary>
-            Имя пользователя
+            Имя доктора
             </summary>
         </member>
-        <member name="P:GroupProject.Models.RegisterModel.Surname">
+        <member name="P:GroupProject.Models.DoctorRegisterModel.Surname">
             <summary>
-            Фамилия пользователя
+            Фамилия доктора
             </summary>
         </member>
-        <member name="P:GroupProject.Models.RegisterModel.Patronym">
+        <member name="P:GroupProject.Models.DoctorRegisterModel.Patronym">
             <summary>
-            Отчество
+            Отчество доктора
             </summary>
         </member>
-        <member name="P:GroupProject.Models.RegisterModel.Email">
+        <member name="P:GroupProject.Models.DoctorRegisterModel.Email">
             <summary>
             Электронная почта
             </summary>
         </member>
-        <member name="P:GroupProject.Models.RegisterModel.Username">
+        <member name="P:GroupProject.Models.DoctorRegisterModel.Username">
             <summary>
-            Логин пользователя
+            Логин доктора
             </summary>
         </member>
-        <member name="P:GroupProject.Models.RegisterModel.Password">
+        <member name="P:GroupProject.Models.DoctorRegisterModel.Password">
             <summary>
-            Пароль пользователя
+            Пароль доктора
+            </summary>
+        </member>
+        <member name="T:GroupProject.Models.PatientRegisterModel">
+            <summary>
+            Модель регистрации пациента
+            </summary>
+        </member>
+        <member name="P:GroupProject.Models.PatientRegisterModel.FirstName">
+            <summary>
+            Имя пациента
+            </summary>
+        </member>
+        <member name="P:GroupProject.Models.PatientRegisterModel.Surname">
+            <summary>
+            Фамилия пациента
+            </summary>
+        </member>
+        <member name="P:GroupProject.Models.PatientRegisterModel.Patronym">
+            <summary>
+            Отчество пациента
+            </summary>
+        </member>
+        <member name="P:GroupProject.Models.PatientRegisterModel.Email">
+            <summary>
+            Электронная почта
+            </summary>
+        </member>
+        <member name="P:GroupProject.Models.PatientRegisterModel.MedicalRecordNumber">
+            <summary>
+            Номер медицинской карты пациента
+            </summary>
+        </member>
+        <member name="P:GroupProject.Models.PatientRegisterModel.Username">
+            <summary>
+            Логин пациента
+            </summary>
+        </member>
+        <member name="P:GroupProject.Models.PatientRegisterModel.Password">
+            <summary>
+            Пароль пациента
             </summary>
         </member>
         <member name="T:GroupProject.Models.ServiceImageProcessingResult">
