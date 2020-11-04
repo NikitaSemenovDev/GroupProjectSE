@@ -140,7 +140,7 @@ namespace GroupProject.Controllers
                         Surname = model.Surname,
                         Patronym = model.Patronym,
                         Email = model.Email,
-                        WorkExperience = model.WorkExperience
+                        WorkExperience = model.WorkExperience.Value
                     };
 
                     Context.Add(person);

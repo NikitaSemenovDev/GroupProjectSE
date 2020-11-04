@@ -6,12 +6,15 @@ using System.Net.Mime;
 using System.Text;
 using System.Threading.Tasks;
 using GroupProject.ActionResults;
+using GroupProject.Database;
+using GroupProject.Database.Models;
 using GroupProject.ExternalServices;
 using GroupProject.Logging;
 using GroupProject.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 
 namespace GroupProject.Controllers
@@ -25,11 +28,13 @@ namespace GroupProject.Controllers
     public class ImageProcessingController : ControllerBase
     {
         private ILogger Logger { get; }
+        private DatabaseContext Context { get; }
         private ImageProcessorService ImageProcessorService { get; }
 
-        public ImageProcessingController(ILogger logger, ImageProcessorService imageProcessorService)
+        public ImageProcessingController(ILogger logger, DatabaseContext context, ImageProcessorService imageProcessorService)
         {
             Logger = logger;
+            Context = context;
             ImageProcessorService = imageProcessorService;
         }
 
@@ -54,8 +59,23 @@ namespace GroupProject.Controllers
                 }
                 MemoryStream stream = new MemoryStream();
                 await image.CopyToAsync(stream);
-                var result = await ImageProcessorService.GetImageResult(stream, image.FileName);
-                return new ProjectJsonResult(result);
+                var imageProcessingResult = await ImageProcessorService.GetImageResult(stream, image.FileName);
+
+                if (User != null && User.Identity.IsAuthenticated)
+                {
+                    ImageProcessingResult result = new ImageProcessingResult()
+                    {
+                        Account = await Context.Accounts.FirstAsync(a => a.Username == User.Identity.Name),
+                        ProcessingDateTime = imageProcessingResult.ProcessingDateTime,
+                        Image = imageProcessingResult.Image,
+                        ProcessingResult = JsonConvert.SerializeObject(imageProcessingResult.ProcessingResult)
+                    };
+                    Context.ImageProcessingResults.Add(result);
+                    await Context.SaveChangesAsync();
+
+                    imageProcessingResult.Id = result.Id;
+                }
+                return new ProjectJsonResult(imageProcessingResult);
             }
             catch (Exception e)
             {

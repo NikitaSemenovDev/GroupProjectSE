@@ -39,7 +39,7 @@ namespace GroupProject.Models
         public string Email { get; set; }
 
         [Required(ErrorMessage = "Введите стаж работы доктора")]
-        public int WorkExperience { get; set; }
+        public int? WorkExperience { get; set; }
 
         /// <summary>
         /// Логин доктора

@@ -25,18 +25,12 @@ namespace GroupProject.ExternalServices
 
         private ILogger Logger { get; }
 
-        private ClaimsPrincipal AuthenticatedUser { get; set; }
 
-        private DatabaseContext Context { get; }
-
-
-        public ImageProcessorService(IConfiguration configuration, HttpClient client, ILogger logger, DatabaseContext context, IHttpContextAccessor httpContextAccessor)
+        public ImageProcessorService(IConfiguration configuration, HttpClient client, ILogger logger)
         {
             Client = client;
             Client.BaseAddress = new Uri(configuration.GetSection("ExternalServices:ImageProcessorServiceUrl").Value);
             Logger = logger;
-            Context = context;
-            AuthenticatedUser = httpContextAccessor.HttpContext?.User;
         }
 
 
@@ -60,24 +54,7 @@ namespace GroupProject.ExternalServices
                 }
 
                 var responseContent = await response.Content.ReadAsStringAsync();
-
                 var imageProcessingResult = JsonConvert.DeserializeObject<ServiceImageProcessingResult>(responseContent);
-
-                if (AuthenticatedUser != null && AuthenticatedUser.Identity.IsAuthenticated)
-                {
-                    DatabaseImageProcessingResult result = new DatabaseImageProcessingResult()
-                    {
-                        Account = await Context.Accounts.FirstAsync(a => a.Username == AuthenticatedUser.Identity.Name),
-                        ProcessingDateTime = imageProcessingResult.ProcessingDateTime,
-                        Image = imageProcessingResult.Image,
-                        ProcessingResult = JsonConvert.SerializeObject(imageProcessingResult.ProcessingResult)
-                    };
-                    Context.ImageProcessingResults.Add(result);
-                    await Context.SaveChangesAsync();
-
-                    imageProcessingResult.Id = result.Id;
-                }
-
                 return imageProcessingResult;
             }
             catch (Exception e)
