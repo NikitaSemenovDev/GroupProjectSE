@@ -5,9 +5,11 @@ using System.Linq;
 using System.Threading.Tasks;
 using GroupProject.ActionResults;
 using GroupProject.Database;
+using GroupProject.Database.Enumerations;
 using GroupProject.Database.Models;
 using GroupProject.ExternalServices;
 using GroupProject.Logging;
+using GroupProject.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -90,6 +92,54 @@ namespace GroupProject.Controllers
                 imageProcessingResult.Id = result.Id;
 
                 return new ProjectJsonResult(imageProcessingResult);
+            }
+            catch (Exception e)
+            {
+                Logger.Error(e.ToString());
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
+        }
+
+
+        /// <summary>
+        /// Получение всех докторов
+        /// </summary>
+        /// <returns>Список докторов</returns>
+        /// <response code="200">Успешное получение списка докторов</response>
+        /// <response code="500">Ошибка сервера</response>
+        [HttpGet("doctors")]
+        [Authorize(Roles = "Administrator")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> GetDoctors()
+        {
+            try
+            {
+                var doctors = await Context.Accounts.AsNoTracking()
+                    .Where(a => a.RoleId == (int)Database.Enumerations.Role.Doctor)
+                    .Include(a => a.Person)
+                    .ToListAsync();
+
+                var models = doctors.Select(d =>
+                {
+                    Doctor doctor = d.Person as Doctor;
+                    return new DoctorModel()
+                    {
+                        AccountId = d.Id,
+                        FirstName = doctor.FirstName,
+                        Surname = doctor.Surname,
+                        Patronym = doctor.Patronym,
+                        Email = doctor.Email,
+                        WorkExperience = doctor.WorkExperience
+                    };
+                });
+
+                var response = new
+                {
+                    data = models
+                };
+
+                return new ProjectJsonResult(response);
             }
             catch (Exception e)
             {

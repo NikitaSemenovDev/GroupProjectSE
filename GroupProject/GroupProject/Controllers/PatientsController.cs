@@ -187,5 +187,57 @@ namespace GroupProject.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError);
             }
         }
+
+
+        /// <summary>
+        /// Получение докторов пациента
+        /// </summary>
+        /// <returns>Список докторов пациента</returns>
+        /// <response code="200">Успешное получение списка докторов пациента</response>
+        /// <response code="500">Ошибка сервера</response>
+        [HttpGet("patient/doctors")]
+        [Authorize(Roles = "Patient")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> GetDoctors()
+        {
+            try
+            {
+                var currentUser = await Context.Accounts.AsNoTracking()
+                    .Include(a => a.LinkedAccounts)
+                    .ThenInclude(a => a.LinkedAccount)
+                    .ThenInclude(a => a.Person)
+                    .FirstAsync(a => a.Username == User.Identity.Name);
+
+                var doctors = currentUser.LinkedAccounts
+                    .Select(a => a.LinkedAccount);
+
+                var models = doctors.Select(d =>
+                {
+                    Doctor doctor = d.Person as Doctor;
+                    return new DoctorModel()
+                    {
+                        AccountId = d.Id,
+                        FirstName = doctor.FirstName,
+                        Surname = doctor.Surname,
+                        Patronym = doctor.Patronym,
+                        Email = doctor.Email,
+                        WorkExperience = doctor.WorkExperience
+                    };
+                });
+
+                var response = new
+                {
+                    data = models
+                };
+
+                return new ProjectJsonResult(response);
+            }
+            catch (Exception e)
+            {
+                Logger.Error(e.ToString());
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
+        }
     }
 }

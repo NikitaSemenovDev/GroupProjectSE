@@ -38,6 +38,9 @@ namespace GroupProject.Models
         [MaxLength(100, ErrorMessage = "Длина электронной почты может быть максимум 100 символов")]
         public string Email { get; set; }
 
+        /// <summary>
+        /// Стаж
+        /// </summary>
         [Required(ErrorMessage = "Введите стаж работы доктора")]
         public int? WorkExperience { get; set; }
 

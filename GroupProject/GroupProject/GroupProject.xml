@@ -67,6 +67,14 @@
             3. Указанный аккаунт принадлежит не пациенту</response>
             <response code="500">Ошибка сервера</response>
         </member>
+        <member name="M:GroupProject.Controllers.DoctorsController.GetDoctors">
+            <summary>
+            Получение всех докторов
+            </summary>
+            <returns>Список докторов</returns>
+            <response code="200">Успешное получение списка докторов</response>
+            <response code="500">Ошибка сервера</response>
+        </member>
         <member name="T:GroupProject.Controllers.ImageProcessingController">
             <summary>
             Работа с изображениями
@@ -118,6 +126,14 @@
             3. Указанный аккаунт принадлежит не пользователю</response>
             <response code="500">Ошибка сервера</response>
         </member>
+        <member name="M:GroupProject.Controllers.PatientsController.GetDoctors">
+            <summary>
+            Получение докторов пациента
+            </summary>
+            <returns>Список докторов пациента</returns>
+            <response code="200">Успешное получение списка докторов пациента</response>
+            <response code="500">Ошибка сервера</response>
+        </member>
         <member name="M:GroupProject.Controllers.ValuesController.Get">
             <summary>
             Get random values
@@ -161,6 +177,41 @@
             <param name="fileName">Название изображения</param>
             <returns>Результат обработки изображения</returns>
         </member>
+        <member name="T:GroupProject.Models.DoctorModel">
+            <summary>
+            Модель доктора
+            </summary>
+        </member>
+        <member name="P:GroupProject.Models.DoctorModel.AccountId">
+            <summary>
+            Идентификатор аккаунта доктора
+            </summary>
+        </member>
+        <member name="P:GroupProject.Models.DoctorModel.FirstName">
+            <summary>
+            Имя доктора
+            </summary>
+        </member>
+        <member name="P:GroupProject.Models.DoctorModel.Surname">
+            <summary>
+            Фамилия доктора
+            </summary>
+        </member>
+        <member name="P:GroupProject.Models.DoctorModel.Patronym">
+            <summary>
+            Отчество доктора
+            </summary>
+        </member>
+        <member name="P:GroupProject.Models.DoctorModel.Email">
+            <summary>
+            Электронная почта
+            </summary>
+        </member>
+        <member name="P:GroupProject.Models.DoctorModel.WorkExperience">
+            <summary>
+            Стаж
+            </summary>
+        </member>
         <member name="T:GroupProject.Models.DoctorRegisterModel">
             <summary>
             Модель регистрации доктора
@@ -184,6 +235,11 @@
         <member name="P:GroupProject.Models.DoctorRegisterModel.Email">
             <summary>
             Электронная почта
+            </summary>
+        </member>
+        <member name="P:GroupProject.Models.DoctorRegisterModel.WorkExperience">
+            <summary>
+            Стаж
             </summary>
         </member>
         <member name="P:GroupProject.Models.DoctorRegisterModel.Username">
