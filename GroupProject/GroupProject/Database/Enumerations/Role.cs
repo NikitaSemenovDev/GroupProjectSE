@@ -11,9 +11,9 @@ namespace GroupProject.Database.Enumerations
     public enum Role
     {
         /// <summary>
-        /// Клиент
+        /// Пациент
         /// </summary>
-        User = 1,
+        Patient = 1,
 
         /// <summary>
         /// Доктор

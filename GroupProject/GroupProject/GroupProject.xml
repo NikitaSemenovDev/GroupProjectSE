@@ -54,6 +54,14 @@
             Работа с докторами
             </summary>
         </member>
+        <member name="M:GroupProject.Controllers.DoctorsController.GetPatients">
+            <summary>
+            Получение пациентов доктора
+            </summary>
+            <returns>Список пациентов доктора</returns>
+            <response code="200">Успешное получение списка пациентов доктора</response>
+            <response code="500">Ошибка сервера</response>
+        </member>
         <member name="M:GroupProject.Controllers.DoctorsController.UpdoadImage(Microsoft.AspNetCore.Http.IFormFile,System.Int32)">
             <summary>
             Загрузка изображения пациента
@@ -134,6 +142,14 @@
             <response code="200">Успешное получение списка докторов пациента</response>
             <response code="500">Ошибка сервера</response>
         </member>
+        <member name="M:GroupProject.Controllers.PatientsController.GetPatients">
+            <summary>
+            Получение всех пациентов
+            </summary>
+            <returns>Список пациентов</returns>
+            <response code="200">Успешное получение списка пациентов</response>
+            <response code="500">Ошибка сервера</response>
+        </member>
         <member name="M:GroupProject.Controllers.ValuesController.Get">
             <summary>
             Get random values
@@ -149,9 +165,9 @@
             Роли пользователей системы
             </summary>
         </member>
-        <member name="F:GroupProject.Database.Enumerations.Role.User">
+        <member name="F:GroupProject.Database.Enumerations.Role.Patient">
             <summary>
-            Клиент
+            Пациент
             </summary>
         </member>
         <member name="F:GroupProject.Database.Enumerations.Role.Doctor">
@@ -250,6 +266,41 @@
         <member name="P:GroupProject.Models.DoctorRegisterModel.Password">
             <summary>
             Пароль доктора
+            </summary>
+        </member>
+        <member name="T:GroupProject.Models.PatientModel">
+            <summary>
+            Модель пациента
+            </summary>
+        </member>
+        <member name="P:GroupProject.Models.PatientModel.AccountId">
+            <summary>
+            Идентификатор аккаунта пациента
+            </summary>
+        </member>
+        <member name="P:GroupProject.Models.PatientModel.FirstName">
+            <summary>
+            Имя пациента
+            </summary>
+        </member>
+        <member name="P:GroupProject.Models.PatientModel.Surname">
+            <summary>
+            Фамилия пациента
+            </summary>
+        </member>
+        <member name="P:GroupProject.Models.PatientModel.Patronym">
+            <summary>
+            Отчество пациента
+            </summary>
+        </member>
+        <member name="P:GroupProject.Models.PatientModel.Email">
+            <summary>
+            Электронная почта
+            </summary>
+        </member>
+        <member name="P:GroupProject.Models.PatientModel.MedicalRecordNumber">
+            <summary>
+            Номер медицинской карты пациента
             </summary>
         </member>
         <member name="T:GroupProject.Models.PatientRegisterModel">

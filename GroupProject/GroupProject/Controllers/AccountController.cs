@@ -89,7 +89,7 @@ namespace GroupProject.Controllers
                     Username = model.Username,
                     Password = model.Password,
                     Person = person,
-                    Role = await Context.Roles.FirstOrDefaultAsync(r => r.Id == (int)PersonRole.User)
+                    Role = await Context.Roles.FirstOrDefaultAsync(r => r.Id == (int)PersonRole.Patient)
                 };
 
                 Context.Add(account);

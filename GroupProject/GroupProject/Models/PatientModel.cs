@@ -6,27 +6,27 @@ using System.Threading.Tasks;
 namespace GroupProject.Models
 {
     /// <summary>
-    /// Модель доктора
+    /// Модель пациента
     /// </summary>
-    public class DoctorModel
+    public class PatientModel
     {
         /// <summary>
-        /// Идентификатор аккаунта доктора
+        /// Идентификатор аккаунта пациента
         /// </summary>
         public int AccountId { get; set; }
 
         /// <summary>
-        /// Имя доктора
+        /// Имя пациента
         /// </summary>
         public string FirstName { get; set; }
 
         /// <summary>
-        /// Фамилия доктора
+        /// Фамилия пациента
         /// </summary>
         public string Surname { get; set; }
 
         /// <summary>
-        /// Отчество доктора
+        /// Отчество пациента
         /// </summary>
         public string Patronym { get; set; }
 
@@ -36,8 +36,8 @@ namespace GroupProject.Models
         public string Email { get; set; }
 
         /// <summary>
-        /// Стаж
+        /// Номер медицинской карты пациента
         /// </summary>
-        public int WorkExperience { get; set; }
+        public int? MedicalRecordNumber { get; set; }
     }
 }
