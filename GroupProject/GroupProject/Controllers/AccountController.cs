@@ -27,7 +27,7 @@ namespace GroupProject.Controllers
     /// Работа с аккаунтом
     /// </summary>
     [Produces("application/json")]
-    [Route("api/account")]
+    [Route("api")]
     [ApiController]
     public class AccountController : ControllerBase
     {
@@ -51,7 +51,7 @@ namespace GroupProject.Controllers
         /// <response code="400">1. Модель регистрации некорректна.
         /// 2. Пациент с таким логином уже существует.</response>
         /// <response code="500">Ошибка на сервере</response>
-        [HttpPost("patients/register")]
+        [HttpPost("accounts/patients/register")]
         [AllowAnonymous]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -114,7 +114,7 @@ namespace GroupProject.Controllers
         /// <response code="400">1. Модель регистрации некорректна.
         /// 2. Доктор с таким логином уже существует.</response>
         /// <response code="500">Ошибка на сервере</response>
-        [HttpPost("doctors/register")]
+        [HttpPost("accounts/doctors/register")]
         [Authorize(Roles = "Administrator")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -176,7 +176,7 @@ namespace GroupProject.Controllers
         /// <returns>Токен для доступа к серверу</returns>
         /// <response code="200">Пользователь аутентифицирован</response>
         /// <response code="500">Ошибка сервера</response>
-        [HttpPost("login")]
+        [HttpPost("account/login")]
         [AllowAnonymous]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -210,6 +210,7 @@ namespace GroupProject.Controllers
                 {
                     access_token = encodedJwt,
                     username = identity.Name,
+                    role = identity.Claims.FirstOrDefault(c => c.Type == identity.RoleClaimType).Value
                 };
 
                 return new JsonResult(response);
@@ -256,6 +257,126 @@ namespace GroupProject.Controllers
                 string exception = e.ToString();
                 Logger.Error(exception);
                 throw new Exception(exception);
+            }
+        }
+
+
+        /// <summary>
+        /// Получение информации об авторизованном пользователе
+        /// </summary>
+        /// <returns>Информация о пользователе</returns>
+        /// <response code="200">Информация успешно получена</response>
+        /// <response code="500">Ошибка сервера</response>
+        [HttpGet("account")]
+        [Authorize(Roles = "Patient,Doctor")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> GetAccountInformation()
+        {
+            try
+            {
+                Account account = await Context.Accounts.AsNoTracking()
+                    .Include(a => a.Person)
+                    .FirstAsync(a => a.Username == User.Identity.Name);
+
+                object data = null;
+                if (User.IsInRole(PersonRole.Patient.ToString()))
+                {
+                    Patient patient = account.Person as Patient;
+                    data = new PatientModel()
+                    {
+                        AccountId = account.Id,
+                        FirstName = patient.FirstName,
+                        Surname = patient.Surname,
+                        Patronym = patient.Patronym,
+                        Email = patient.Email,
+                        MedicalRecordNumber = patient.MedicalRecordNumber
+                    };
+                }
+                else
+                {
+                    Doctor doctor = account.Person as Doctor;
+                    data = new DoctorModel()
+                    {
+                        AccountId = account.Id,
+                        FirstName = doctor.FirstName,
+                        Surname = doctor.Surname,
+                        Patronym = doctor.Patronym,
+                        Email = doctor.Email,
+                        WorkExperience = doctor.WorkExperience
+                    };
+                }
+
+                return new ProjectJsonResult(data);
+            }
+            catch (Exception e)
+            {
+                Logger.Error(e.ToString());
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
+        }
+
+
+        /// <summary>
+        /// Получение информации о пользователе
+        /// </summary>
+        /// <param name="id">Идентификатор аккаунта пользователя</param>
+        /// <returns>Информация о пользователе</returns>
+        /// <response code="200">Информация успешно получена</response>
+        /// <response code="400">Аккаунта с переданным идентификатором не найдено</response>
+        /// <response code="500">Ошибка сервера</response>
+        [HttpGet("accounts/{id:int}")]
+        [Authorize]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> GetAccountInformation(int id)
+        {
+            try
+            {
+                Account account = await Context.Accounts.AsNoTracking()
+                    .Include(a => a.Person)
+                    .FirstOrDefaultAsync(a => a.Id == id);
+
+                if (account == null)
+                {
+                    return BadRequest(new { error = "Аккаунта с переданным идентификатором не найдено." });
+                }
+
+                object data = null;
+                if (account.Person is Patient)
+                {
+                    Patient patient = account.Person as Patient;
+                    data = new PatientModel()
+                    {
+                        AccountId = account.Id,
+                        FirstName = patient.FirstName,
+                        Surname = patient.Surname,
+                        Patronym = patient.Patronym,
+                        Email = patient.Email,
+                        MedicalRecordNumber = patient.MedicalRecordNumber
+                    };
+                }
+                else
+                {
+                    Doctor doctor = account.Person as Doctor;
+                    data = new DoctorModel()
+                    {
+                        AccountId = account.Id,
+                        FirstName = doctor.FirstName,
+                        Surname = doctor.Surname,
+                        Patronym = doctor.Patronym,
+                        Email = doctor.Email,
+                        WorkExperience = doctor.WorkExperience
+                    };
+                }
+
+                return new ProjectJsonResult(data);
+            }
+            catch (Exception e)
+            {
+                Logger.Error(e.ToString());
+                return StatusCode(StatusCodes.Status500InternalServerError);
             }
         }
     }

@@ -49,6 +49,24 @@
             <param name="password">Пароль пользователя</param>
             <returns>Идентификационная информация</returns>
         </member>
+        <member name="M:GroupProject.Controllers.AccountController.GetAccountInformation">
+            <summary>
+            Получение информации об авторизованном пользователе
+            </summary>
+            <returns>Информация о пользователе</returns>
+            <response code="200">Информация успешно получена</response>
+            <response code="500">Ошибка сервера</response>
+        </member>
+        <member name="M:GroupProject.Controllers.AccountController.GetAccountInformation(System.Int32)">
+            <summary>
+            Получение информации о пользователе
+            </summary>
+            <param name="id">Идентификатор аккаунта пользователя</param>
+            <returns>Информация о пользователе</returns>
+            <response code="200">Информация успешно получена</response>
+            <response code="400">Аккаунта с переданным идентификатором не найдено</response>
+            <response code="500">Ошибка сервера</response>
+        </member>
         <member name="T:GroupProject.Controllers.DoctorsController">
             <summary>
             Работа с докторами

@@ -35,7 +35,6 @@ namespace GroupProject.Controllers
         }
 
 
-
         /// <summary>
         /// Получение истории обработок изображений
         /// </summary>
