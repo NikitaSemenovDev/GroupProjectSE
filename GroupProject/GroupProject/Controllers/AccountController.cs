@@ -413,7 +413,7 @@ namespace GroupProject.Controllers
         /// <response code="500">Ошибка сервера</response>
         [HttpPatch("account")]
         [Authorize(Roles = "Patient,Doctor")]
-        [ProducesResponseType(StatusCodes.200)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
