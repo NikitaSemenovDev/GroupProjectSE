@@ -191,24 +191,11 @@ namespace GroupProject.Controllers
                     return BadRequest(new { error = "Неверные логин или пароль." });
                 }
 
-                DateTime now = DateTime.UtcNow;
-
-                SigningCredentials credentials = 
-                    new SigningCredentials(AuthOptions.GetSymmetricSecurityKey(), SecurityAlgorithms.HmacSha256);
-
-                JwtSecurityToken jwt = new JwtSecurityToken(
-                    issuer: AuthOptions.Issuer,
-                    audience: AuthOptions.Audience,
-                    notBefore: now,
-                    claims: identity.Claims,
-                    expires: now.AddMinutes(AuthOptions.Lifetime),
-                    signingCredentials: credentials);
-
-                var encodedJwt = new JwtSecurityTokenHandler().WriteToken(jwt);
+                string encodedJwt = CreateToken(identity);
 
                 var response = new
                 {
-                    access_token = encodedJwt,
+                    accessToken = encodedJwt,
                     username = identity.Name,
                     role = identity.Claims.FirstOrDefault(c => c.Type == identity.RoleClaimType).Value
                 };
@@ -257,6 +244,40 @@ namespace GroupProject.Controllers
                 string exception = e.ToString();
                 Logger.Error(exception);
                 throw new Exception(exception);
+            }
+        }
+
+
+        /// <summary>
+        /// Создание JWT-токена
+        /// </summary>
+        /// <param name="identity">Идентификационная информация о пользователе</param>
+        /// <returns>JWT-токен</returns>
+        private string CreateToken(ClaimsIdentity identity)
+        {
+            try
+            {
+                DateTime now = DateTime.UtcNow;
+
+                SigningCredentials credentials =
+                    new SigningCredentials(AuthOptions.GetSymmetricSecurityKey(), SecurityAlgorithms.HmacSha256);
+
+                JwtSecurityToken jwt = new JwtSecurityToken(
+                    issuer: AuthOptions.Issuer,
+                    audience: AuthOptions.Audience,
+                    notBefore: now,
+                    claims: identity.Claims,
+                    expires: now.AddMinutes(AuthOptions.Lifetime),
+                    signingCredentials: credentials);
+
+                var encodedJwt = new JwtSecurityTokenHandler().WriteToken(jwt);
+
+                return encodedJwt;
+            }
+            catch (Exception e)
+            {
+                Logger.Error(e.ToString());
+                throw;
             }
         }
 
@@ -372,6 +393,66 @@ namespace GroupProject.Controllers
                 }
 
                 return new ProjectJsonResult(data);
+            }
+            catch (Exception e)
+            {
+                Logger.Error(e.ToString());
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
+        }
+
+
+        /// <summary>
+        /// Изменение информации об аккаунте авторизованного пользователя
+        /// </summary>
+        /// <param name="account">Измененная информация об аккаунте</param>
+        /// <returns>Результат изменения информации об аккаунте</returns>
+        /// <response code="200">Информация успешно изменена, и аутентификационные данные изменились</response>
+        /// <response code="204">Информация успешно изменена</response>
+        /// <response code="400">Отсутствует модель изменения информации</response>
+        /// <response code="500">Ошибка сервера</response>
+        [HttpPatch("account")]
+        [Authorize(Roles = "Patient,Doctor")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> EditAccount(AccountModel account)
+        {
+            try
+            {
+                Account accountToChange = await Context.Accounts.FirstAsync(a => a.Username == User.Identity.Name);
+                bool usernameChanged = false;
+
+                if (account.Username != null)
+                {
+                    accountToChange.Username = account.Username;
+                    usernameChanged = true;
+                }
+
+                if (account.Password != null)
+                {
+                    accountToChange.Password = account.Password;
+                }
+
+                await Context.SaveChangesAsync();
+
+                if (usernameChanged)
+                {
+                    var identity = await GetIdentity(accountToChange.Username, accountToChange.Password);
+                    string token = CreateToken(identity);
+
+                    var response = new
+                    {
+                        accessToken = token,
+                        username = accountToChange.Username,
+                        role = identity.Claims.First(i => i.Type == identity.RoleClaimType).Value
+                    };
+
+                    return new ProjectJsonResult(response);
+                }
+
+                return StatusCode(StatusCodes.Status204NoContent);
             }
             catch (Exception e)
             {

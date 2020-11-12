@@ -49,6 +49,13 @@
             <param name="password">Пароль пользователя</param>
             <returns>Идентификационная информация</returns>
         </member>
+        <member name="M:GroupProject.Controllers.AccountController.CreateToken(System.Security.Claims.ClaimsIdentity)">
+            <summary>
+            Создание JWT-токена
+            </summary>
+            <param name="identity">Идентификационная информация о пользователе</param>
+            <returns>JWT-токен</returns>
+        </member>
         <member name="M:GroupProject.Controllers.AccountController.GetAccountInformation">
             <summary>
             Получение информации об авторизованном пользователе
@@ -65,6 +72,17 @@
             <returns>Информация о пользователе</returns>
             <response code="200">Информация успешно получена</response>
             <response code="400">Аккаунта с переданным идентификатором не найдено</response>
+            <response code="500">Ошибка сервера</response>
+        </member>
+        <member name="M:GroupProject.Controllers.AccountController.EditAccount(GroupProject.Models.AccountModel)">
+            <summary>
+            Изменение информации об аккаунте авторизованного пользователя
+            </summary>
+            <param name="account">Измененная информация об аккаунте</param>
+            <returns>Результат изменения информации об аккаунте</returns>
+            <response code="200">Информация успешно изменена, и аутентификационные данные изменились</response>
+            <response code="204">Информация успешно изменена</response>
+            <response code="400">Отсутствует модель изменения информации</response>
             <response code="500">Ошибка сервера</response>
         </member>
         <member name="T:GroupProject.Controllers.DoctorsController">
@@ -210,6 +228,21 @@
             <param name="image">Поток байт изображения</param>
             <param name="fileName">Название изображения</param>
             <returns>Результат обработки изображения</returns>
+        </member>
+        <member name="T:GroupProject.Models.AccountModel">
+            <summary>
+            Модель изменения информации об аккаунте
+            </summary>
+        </member>
+        <member name="P:GroupProject.Models.AccountModel.Username">
+            <summary>
+            Логин пользователя
+            </summary>
+        </member>
+        <member name="P:GroupProject.Models.AccountModel.Password">
+            <summary>
+            Пароль аккаунта
+            </summary>
         </member>
         <member name="T:GroupProject.Models.DoctorModel">
             <summary>
