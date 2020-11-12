@@ -85,6 +85,24 @@
             <response code="400">Отсутствует модель изменения информации</response>
             <response code="500">Ошибка сервера</response>
         </member>
+        <member name="T:GroupProject.Controllers.AdministrationController">
+            <summary>
+            Методы для выполнения администратором
+            </summary>
+        </member>
+        <member name="M:GroupProject.Controllers.AdministrationController.Connect(System.Int32,System.Int32)">
+            <summary>
+            Добавление связи между врачом и пациентом
+            </summary>
+            <param name="doctorAccountId">Идентификатор аккаунта врача</param>
+            <param name="patientAccountId">Идентификатор аккаунта пациента</param>
+            <returns>Результат добавления связи между пациентом и врачом</returns>
+            <response code="204">Успешное добавление связи</response>
+            <response code="400">1. Аккаунт врача с указанным идентификатором не найден
+            2. Аккаунт пациента с указанным идентификатором не найден
+            3.Связь между указанными пациентом и врачом уже существует</response>
+            <response code="500">Ошибка сервера</response>
+        </member>
         <member name="T:GroupProject.Controllers.DoctorsController">
             <summary>
             Работа с докторами
