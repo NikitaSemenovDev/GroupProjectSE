@@ -234,9 +234,24 @@
             Администратор
             </summary>
         </member>
-        <member name="P:GroupProject.Database.Models.ImageProcessingResult.ProcessingResult">
+        <member name="P:GroupProject.Database.Models.ImageProcessingResult.Size">
             <summary>
-            JSON-массив чисел
+            JSON-массив чисел int
+            </summary>
+        </member>
+        <member name="P:GroupProject.Database.Models.ImageProcessingResult.RegionsPredictions">
+            <summary>
+            JSON-массив результатов обработки регионов { probabilities, coordinates }
+            </summary>
+        </member>
+        <member name="P:GroupProject.Database.Models.ImageProcessingResult.ImagePredictions">
+            <summary>
+            JSON-массив результата обработки изображения
+            </summary>
+        </member>
+        <member name="P:GroupProject.Database.Models.ImageProcessingResult.DiseasesNames">
+            <summary>
+            JSON-массив заболеваний { en_title, ru_title }
             </summary>
         </member>
         <member name="M:GroupProject.ExternalServices.ImageProcessorService.GetImageResult(System.IO.MemoryStream,System.String)">
@@ -260,6 +275,21 @@
         <member name="P:GroupProject.Models.AccountModel.Password">
             <summary>
             Пароль аккаунта
+            </summary>
+        </member>
+        <member name="T:GroupProject.Models.Disease">
+            <summary>
+            Заболевание
+            </summary>
+        </member>
+        <member name="P:GroupProject.Models.Disease.TitleInEnglish">
+            <summary>
+            Название на английском языке
+            </summary>
+        </member>
+        <member name="P:GroupProject.Models.Disease.TitleInRussian">
+            <summary>
+            Название на русском языке
             </summary>
         </member>
         <member name="T:GroupProject.Models.DoctorModel">
@@ -412,6 +442,21 @@
             Пароль пациента
             </summary>
         </member>
+        <member name="T:GroupProject.Models.RegionPrediction">
+            <summary>
+            Результат обработки региона
+            </summary>
+        </member>
+        <member name="P:GroupProject.Models.RegionPrediction.Probabilities">
+            <summary>
+            Вероятности
+            </summary>
+        </member>
+        <member name="P:GroupProject.Models.RegionPrediction.Coordinates">
+            <summary>
+            Координаты региона
+            </summary>
+        </member>
         <member name="T:GroupProject.Models.ServiceImageProcessingResult">
             <summary>
             Модель результата обработки изображения в сервисе
@@ -422,9 +467,9 @@
             Идентификатор результата обработки изображения
             </summary>
         </member>
-        <member name="P:GroupProject.Models.ServiceImageProcessingResult.ProcessingDateTime">
+        <member name="P:GroupProject.Models.ServiceImageProcessingResult.Size">
             <summary>
-            Время обработки изображения
+            Размер изображения
             </summary>
         </member>
         <member name="P:GroupProject.Models.ServiceImageProcessingResult.Image">
@@ -432,9 +477,24 @@
             Обрабатываемое изображение
             </summary>
         </member>
-        <member name="P:GroupProject.Models.ServiceImageProcessingResult.ProcessingResult">
+        <member name="P:GroupProject.Models.ServiceImageProcessingResult.ProcessingDateTime">
+            <summary>
+            Время обработки изображения
+            </summary>
+        </member>
+        <member name="P:GroupProject.Models.ServiceImageProcessingResult.RegionsPredictions">
+            <summary>
+            Результат обработки регионов 
+            </summary>
+        </member>
+        <member name="P:GroupProject.Models.ServiceImageProcessingResult.ImagePredictions">
             <summary>
             Результат обработки изображения
+            </summary>
+        </member>
+        <member name="P:GroupProject.Models.ServiceImageProcessingResult.DiseasesNames">
+            <summary>
+            Заболевания
             </summary>
         </member>
     </members>

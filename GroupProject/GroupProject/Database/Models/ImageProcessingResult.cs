@@ -13,13 +13,28 @@ namespace GroupProject.Database.Models
 
         public Account Account { get; set; }
 
+        /// <summary>
+        /// JSON-массив чисел int
+        /// </summary>
+        public string Size { get; set; }
+
         public byte[] Image { get; set; }
 
         public DateTime ProcessingDateTime { get; set; }
 
         /// <summary>
-        /// JSON-массив чисел
+        /// JSON-массив результатов обработки регионов { probabilities, coordinates }
         /// </summary>
-        public string ProcessingResult { get; set; }
+        public string RegionsPredictions { get; set; }
+
+        /// <summary>
+        /// JSON-массив результата обработки изображения
+        /// </summary>
+        public string ImagePredictions { get; set; }
+
+        /// <summary>
+        /// JSON-массив заболеваний { en_title, ru_title }
+        /// </summary>
+        public string DiseasesNames { get; set; }
     }
 }

@@ -53,7 +53,9 @@ namespace GroupProject.ExternalServices
                     throw new Exception("Не удалось получить результат обработки");
                 }
 
-                var responseContent = await response.Content.ReadAsStringAsync();
+                var responseBytes = await response.Content.ReadAsByteArrayAsync();
+                Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
+                var responseContent = Encoding.GetEncoding("windows-1251").GetString(responseBytes);
                 var imageProcessingResult = JsonConvert.DeserializeObject<ServiceImageProcessingResult>(responseContent);
                 return imageProcessingResult;
             }

@@ -53,13 +53,6 @@ namespace GroupProject.Controllers
             {
                 var databaseImages = await Context.ImageProcessingResults.AsNoTracking()
                    .Where(r => r.Account.Username == User.Identity.Name)
-                   .Select(r => new
-                   {
-                       Id = r.Id,
-                       ProcessingDateTime = r.ProcessingDateTime,
-                       Image = r.Image,
-                       ProcessingResult = r.ProcessingResult
-                   })
                    .ToListAsync();
 
                 var images = databaseImages
@@ -68,7 +61,10 @@ namespace GroupProject.Controllers
                         Id = i.Id,
                         ProcessingDateTime = i.ProcessingDateTime,
                         Image = i.Image,
-                        ProcessingResult = JsonConvert.DeserializeObject<double[]>(i.ProcessingResult)
+                        Size = JsonConvert.DeserializeObject<IEnumerable<int>>(i.Size),
+                        RegionsPredictions = JsonConvert.DeserializeObject<IEnumerable<RegionPrediction>>(i.RegionsPredictions),
+                        ImagePredictions = JsonConvert.DeserializeObject<IEnumerable<double>>(i.ImagePredictions),
+                        DiseasesNames = JsonConvert.DeserializeObject<IEnumerable<Disease>>(i.DiseasesNames)
                     });
 
                 var response = new
@@ -157,13 +153,7 @@ namespace GroupProject.Controllers
 
                 var databaseImages = await Context.ImageProcessingResults.AsNoTracking()
                     .Where(i => i.AccountId == id)
-                    .Select(i => new
-                    {
-                        Id = i.Id,
-                        ProcessingDateTime = i.ProcessingDateTime,
-                        Image = i.Image,
-                        ProcessingResult = i.ProcessingResult
-                    }).ToListAsync();
+                    .ToListAsync();
 
                 var images = databaseImages
                     .Select(i => new ServiceImageProcessingResult()
@@ -171,7 +161,10 @@ namespace GroupProject.Controllers
                         Id = i.Id,
                         ProcessingDateTime = i.ProcessingDateTime,
                         Image = i.Image,
-                        ProcessingResult = JsonConvert.DeserializeObject<double[]>(i.ProcessingResult)
+                        Size = JsonConvert.DeserializeObject<IEnumerable<int>>(i.Size),
+                        RegionsPredictions = JsonConvert.DeserializeObject<IEnumerable<RegionPrediction>>(i.RegionsPredictions),
+                        ImagePredictions = JsonConvert.DeserializeObject<IEnumerable<double>>(i.ImagePredictions),
+                        DiseasesNames = JsonConvert.DeserializeObject<IEnumerable<Disease>>(i.DiseasesNames)
                     });
 
                 var response = new

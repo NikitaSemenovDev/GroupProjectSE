@@ -70,7 +70,10 @@ namespace GroupProject.Controllers
                         Account = await Context.Accounts.FirstAsync(a => a.Username == User.Identity.Name),
                         ProcessingDateTime = imageProcessingResult.ProcessingDateTime,
                         Image = imageProcessingResult.Image,
-                        ProcessingResult = JsonConvert.SerializeObject(imageProcessingResult.ProcessingResult)
+                        Size = JsonConvert.SerializeObject(imageProcessingResult.Size),
+                        RegionsPredictions = JsonConvert.SerializeObject(imageProcessingResult.RegionsPredictions),
+                        ImagePredictions = JsonConvert.SerializeObject(imageProcessingResult.ImagePredictions),
+                        DiseasesNames = JsonConvert.SerializeObject(imageProcessingResult.DiseasesNames)
                     };
                     Context.ImageProcessingResults.Add(result);
                     await Context.SaveChangesAsync();
@@ -85,5 +88,5 @@ namespace GroupProject.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError);
             }
         }
-    }
+    } 
 }

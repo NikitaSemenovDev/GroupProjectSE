@@ -136,7 +136,10 @@ namespace GroupProject.Controllers
                     Account = await Context.Accounts.FirstOrDefaultAsync(a => a.Id == id),
                     ProcessingDateTime = imageProcessingResult.ProcessingDateTime,
                     Image = imageProcessingResult.Image,
-                    ProcessingResult = JsonConvert.SerializeObject(imageProcessingResult.ProcessingResult)
+                    Size = JsonConvert.SerializeObject(imageProcessingResult.Size),
+                    RegionsPredictions = JsonConvert.SerializeObject(imageProcessingResult.RegionsPredictions),
+                    ImagePredictions = JsonConvert.SerializeObject(imageProcessingResult.ImagePredictions),
+                    DiseasesNames = JsonConvert.SerializeObject(imageProcessingResult)
                 };
                 Context.Add(result);
                 await Context.SaveChangesAsync();
