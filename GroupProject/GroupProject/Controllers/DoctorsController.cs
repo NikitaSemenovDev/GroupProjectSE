@@ -139,7 +139,7 @@ namespace GroupProject.Controllers
                     Size = JsonConvert.SerializeObject(imageProcessingResult.Size),
                     RegionsPredictions = JsonConvert.SerializeObject(imageProcessingResult.RegionsPredictions),
                     ImagePredictions = JsonConvert.SerializeObject(imageProcessingResult.ImagePredictions),
-                    DiseasesNames = JsonConvert.SerializeObject(imageProcessingResult)
+                    DiseasesNames = JsonConvert.SerializeObject(imageProcessingResult.DiseasesNames)
                 };
                 Context.Add(result);
                 await Context.SaveChangesAsync();
